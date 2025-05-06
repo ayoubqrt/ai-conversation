@@ -5,7 +5,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "conversation-ai",
-  "main": "src/server.ts",
+  "main": "src/backend/server.ts",
   "compatibility_date": "2025-02-04",
   "compatibility_flags": [
     "nodejs_compat",

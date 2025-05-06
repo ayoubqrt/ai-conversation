@@ -4,7 +4,7 @@
 declare namespace Cloudflare {
 	interface Env {
 		OPENAI_API_KEY: string;
-		Chat: DurableObjectNamespace<import("./src/server").Chat>;
+		Chat: DurableObjectNamespace<import("./src/backend/server").Chat>;
 		R2: R2Bucket;
 		AI: Ai;
 	}

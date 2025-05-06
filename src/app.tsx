@@ -1,9 +1,11 @@
 import { useAgent } from "agents/react";
 import { AgentClient } from "agents/client";
 import { useState } from "react";
+import { micro, microChunking } from "./micro/micro";
+
 const socket = new AgentClient({
   agent: "chat",
-  host: "http://localhost:5173",
+  host: window.location.origin,
 });
 
 socket.binaryType = "arraybuffer";
@@ -13,26 +15,6 @@ let audioTime = audioContext.currentTime;
 
 let bufferQueue = [];
 let bufferSize = 0;
-
-socket.onmessage = (event) => {
-  const chunk = new Int16Array(event.data);
-  bufferQueue.push(chunk);
-  bufferSize += chunk.length;
-
-  // Attends d'avoir ~0.5 sec de son (ex: 24000/2 = 12000 samples)
-  if (bufferSize >= 12000) {
-    const combined = new Int16Array(bufferSize);
-    let offset = 0;
-    for (const b of bufferQueue) {
-      combined.set(b, offset);
-      offset += b.length;
-    }
-    bufferQueue = [];
-    bufferSize = 0;
-
-    playPcmChunk(combined);
-  }
-};
 
 function playPcmChunk(int16) {
   const float32 = new Float32Array(int16.length);
@@ -52,6 +34,9 @@ function playPcmChunk(int16) {
   source.start(audioTime);
   audioTime += buffer.duration;
 }
+
+micro(socket);
+
 export default function Chat() {
   const [message, setMessage] = useState<null | {
     answer: string;
@@ -59,10 +44,37 @@ export default function Chat() {
   }>(null);
   // const agent = useAgent({
   //   agent: "chat",
+  //   WebSocket: socket,
   // });
 
   const onClick = () => {
-    socket.send("asd");
+    // socket.send("asd");
+  };
+
+  socket.onmessage = (event) => {
+    if (typeof event.data === "string") {
+      console.log("Received message from server:", event.data);
+      setMessage(JSON.parse(event.data));
+      return;
+    }
+
+    const chunk = new Int16Array(event.data);
+    bufferQueue.push(chunk);
+    bufferSize += chunk.length;
+
+    // Attends d'avoir ~0.5 sec de son (ex: 24000/2 = 12000 samples)
+    if (bufferSize >= 12000) {
+      const combined = new Int16Array(bufferSize);
+      let offset = 0;
+      for (const b of bufferQueue) {
+        combined.set(b, offset);
+        offset += b.length;
+      }
+      bufferQueue = [];
+      bufferSize = 0;
+
+      playPcmChunk(combined);
+    }
   };
 
   return (
@@ -72,6 +84,7 @@ export default function Chat() {
 
       {message && <p>Answer: {message.answer}</p>}
       {message && <p>Time: {message.time} ms</p>}
+      {message && <p>Transcription Whisper: {message.transcription}</p>}
     </div>
   );
 }

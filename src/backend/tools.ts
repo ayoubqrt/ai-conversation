@@ -5,7 +5,7 @@
 import { tool } from "ai";
 import { z } from "zod";
 
-import type { Chat } from "./server";
+import type { Chat } from "./backend/server";
 import { getCurrentAgent } from "agents";
 import { unstable_scheduleSchema } from "agents/schedule";
 
