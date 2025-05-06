@@ -6,6 +6,7 @@ import {
 } from "agents";
 
 import OpenAI from "openai";
+import { MINIMAL_CHUNK_SIZE } from "./ttsUtils";
 
 export class Chat extends Agent<Env> {
   async onMessage(connection: Connection, message: WSMessage): Promise<void> {
@@ -103,6 +104,13 @@ const textToSpeech = async (text: string, connection: WebSocket, env: Env) => {
     combined.set(buffer);
     combined.set(value, buffer.length);
     buffer = combined;
+
+    // Envoie par chunks
+    while (buffer.length >= MINIMAL_CHUNK_SIZE) {
+      const chunkToSend = buffer.slice(0, MINIMAL_CHUNK_SIZE);
+      connection.send(chunkToSend.buffer);
+      buffer = buffer.slice(MINIMAL_CHUNK_SIZE);
+    }
   }
 
   // Envoie le reste si présent
