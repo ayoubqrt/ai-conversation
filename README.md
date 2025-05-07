@@ -4,28 +4,28 @@ The goal is to build a fully backend-based AI conversational system, allowing an
 
 ## Features
 
-- 🎙️ Your voice is captured by your browser.
+- 🎙️ The voice is captured by the browser.
 - ⚡️ Real-time streaming (responses and microphone), audio chunks are sent from the backend to the browser.
 - The models used are powered by Cloudflare and OpenAI.
-- ✍️ Transcribe: Automatic speech recognition (ASR) is used to transcribe the audio.
-- 🤔 Think: The text is sent to an LLM (like Llama or GPT) for processing.
-- 🗣️ Synthesize: The AI's text response is turned back into speech using the OpenAI TTS API.
+- ✍️ Transcribe (ASR): Automatic speech recognition is used to transcribe the audio.
+- 🤔 Think (NLU): The text is sent to an LLM (like Llama or GPT) for processing.
+- 🗣️ Synthesize (TTS): The AI's text response is turned back into speech using the OpenAI TTS API.
 - ⬅️ Return: The generated audio is streamed back to your browser for playback by sending audio chunks to the backend.
 
 ## Future features
 
-- 📝 Chat history: Need to store the chat history in the backend. Making RAG classification for performance.
+- 📝 Chat history: Need to store the chat history in the backend. Making RAG classification.
 - Need to check the models from Cloudflare to check performances. Take all the models and sent them the same sentence and check the performances. Then see models from Azure, Deepgram (Speech), ElevenLabs (expensive !!), LiveKit (ChatGPT system)
 - ➡️ Stream: Need to send chunks of the microphone to the backend. (Actually the whole audio is sent). Need to make some VAD in backend or device (depending on hardware). So sentence by sentece will be transcribed by the IA model and then TTS will be called.
   Need to make some tests, to check if the AI need the whole text to have the good mood in the voice.
-- 🔄 Interrupt: Jump in anytime! The system handles interruptions gracefully.
+- Interrupt the AI when he's talking to say something else, or answer before he finish
 - Wake up word: like "Hey Google".
 
 ## Old features from cloudflare agents starter
 
-<!-- - 🛠️ Built-in tool system with human-in-the-loop confirmation -->
-<!-- - 📅 Advanced task scheduling (one-time, delayed, and recurring via cron) -->
-<!-- - 🔄 State management and chat history -->
+- 🛠️ Built-in tool system with human-in-the-loop confirmation 
+- 📅 Advanced task scheduling (one-time, delayed, and recurring via cron) 
+- 🔄 State management and chat history
 
 ## Prerequisites
 
