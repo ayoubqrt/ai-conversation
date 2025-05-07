@@ -10,7 +10,9 @@ const Launch = () => {
 
   return (
     <div>
-      {!isClicked && <button onClick={() => setIsClicked(true)}>Launch</button>}
+      {!isClicked && (
+        <button onClick={() => setIsClicked(true)}>Lancer la discussion</button>
+      )}
       {isClicked && (
         <Suspense fallback={<div>Loading...</div>}>
           <App />

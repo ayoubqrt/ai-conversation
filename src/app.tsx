@@ -1,7 +1,8 @@
 import { useAgent } from "agents/react";
 import { AgentClient } from "agents/client";
 import { useState } from "react";
-import { micro, microChunking } from "./micro/micro";
+import { micro, microChunking, microVAD, useMicroVAD } from "./micro/micro";
+import { useVolumeLevel, VoiceCircle } from "./components/VoiceCircle";
 
 const socket = new AgentClient({
   agent: "chat",
@@ -35,26 +36,22 @@ function playPcmChunk(int16) {
   audioTime += buffer.duration;
 }
 
-micro(socket);
+// microVAD(socket);
 
 export default function Chat() {
-  const [message, setMessage] = useState<null | {
-    answer: string;
-    time: number;
-  }>(null);
+  const [messages, setMessages] = useState<string[]>([]);
+  const volume = useVolumeLevel();
+
+  const { isDetectingVoice } = useMicroVAD(socket);
   // const agent = useAgent({
   //   agent: "chat",
   //   WebSocket: socket,
   // });
 
-  const onClick = () => {
-    // socket.send("asd");
-  };
-
   socket.onmessage = (event) => {
     if (typeof event.data === "string") {
       console.log("Received message from server:", event.data);
-      setMessage(JSON.parse(event.data));
+      setMessages((prev) => [...prev, event.data]);
       return;
     }
 
@@ -63,28 +60,57 @@ export default function Chat() {
     bufferSize += chunk.length;
 
     // Attends d'avoir ~0.5 sec de son (ex: 24000/2 = 12000 samples)
-    if (bufferSize >= 12000) {
-      const combined = new Int16Array(bufferSize);
-      let offset = 0;
-      for (const b of bufferQueue) {
-        combined.set(b, offset);
-        offset += b.length;
-      }
-      bufferQueue = [];
-      bufferSize = 0;
 
-      playPcmChunk(combined);
+    const combined = new Int16Array(bufferSize);
+    let offset = 0;
+    for (const b of bufferQueue) {
+      combined.set(b, offset);
+      offset += b.length;
     }
+    bufferQueue = [];
+    bufferSize = 0;
+
+    playPcmChunk(combined);
   };
 
   return (
-    <div>
-      <h1>Test conversation AI</h1>
-      <button onClick={onClick}>Send</button>
+    // center everything in tailwind
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        width: "100vw",
+        flexDirection: "column",
+        gap: "3rem",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <h1>Conversation avec une IA</h1>
 
-      {message && <p>Answer: {message.answer}</p>}
-      {message && <p>Time: {message.time} ms</p>}
-      {message && <p>Transcription Whisper: {message.transcription}</p>}
+        {isDetectingVoice ? <p>Je t'écoute</p> : <p>Pose moi une question</p>}
+        <VoiceCircle volume={volume} />
+      </div>
+      <div
+        style={{
+          overflowY: "auto",
+          scrollbarColor: "black",
+          height: "30%",
+          width: "50%",
+        }}
+      >
+        {messages.map((message, index) => (
+          <p key={index}>{message}</p>
+        ))}
+      </div>
     </div>
   );
 }
