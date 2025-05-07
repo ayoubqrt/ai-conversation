@@ -1,7 +1,6 @@
-import { useAgent } from "agents/react";
 import { AgentClient } from "agents/client";
 import { useState } from "react";
-import { micro, microChunking, microVAD, useMicroVAD } from "./micro/micro";
+import { useMicroVAD } from "./micro/micro";
 import { useVolumeLevel, VoiceCircle } from "./components/VoiceCircle";
 
 const socket = new AgentClient({
@@ -14,10 +13,10 @@ socket.binaryType = "arraybuffer";
 const audioContext = new AudioContext({ sampleRate: 24000 });
 let audioTime = audioContext.currentTime;
 
-let bufferQueue = [];
+let bufferQueue: Int16Array[] = [];
 let bufferSize = 0;
 
-function playPcmChunk(int16) {
+function playPcmChunk(int16: Int16Array) {
   const float32 = new Float32Array(int16.length);
   for (let i = 0; i < int16.length; i++) {
     float32[i] = int16[i] / 32768;

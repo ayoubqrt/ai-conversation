@@ -199,7 +199,7 @@ export const microVAD = (socket: AgentClient<unknown>) => {
 export const initVAD = async (
   stream: MediaStream,
   onVoiceStart: () => void,
-  onVoiceEnd: (blob: Blob) => void
+  onVoiceEnd: (buffer: ArrayBuffer) => void
 ) => {
   const audioCtx = new AudioContext();
   const source = audioCtx.createMediaStreamSource(stream);
