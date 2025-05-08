@@ -1,4 +1,4 @@
-# 🤖 AI Conversation
+# 🤖 AI Conversation proof of concept
 
 The goal is to build a fully backend-based AI conversational system, allowing any device (also with low resources) to connect via WebSocket and initiate a conversation with the AI just by sending and receiving audio chunks and benefits from the functionalities of the system e.g. conversation history, LLM power, low-latency streaming, cost-effectiveness, cost tracking by user, etc.
 

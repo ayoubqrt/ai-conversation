@@ -35,17 +35,11 @@ function playPcmChunk(int16: Int16Array) {
   audioTime += buffer.duration;
 }
 
-// microVAD(socket);
-
 export default function Chat() {
   const [messages, setMessages] = useState<string[]>([]);
   const volume = useVolumeLevel();
 
   const { isDetectingVoice } = useMicroVAD(socket);
-  // const agent = useAgent({
-  //   agent: "chat",
-  //   WebSocket: socket,
-  // });
 
   socket.onmessage = (event) => {
     if (typeof event.data === "string") {
@@ -57,8 +51,6 @@ export default function Chat() {
     const chunk = new Int16Array(event.data);
     bufferQueue.push(chunk);
     bufferSize += chunk.length;
-
-    // Attends d'avoir ~0.5 sec de son (ex: 24000/2 = 12000 samples)
 
     const combined = new Int16Array(bufferSize);
     let offset = 0;
@@ -73,7 +65,6 @@ export default function Chat() {
   };
 
   return (
-    // center everything in tailwind
     <div
       style={{
         display: "flex",

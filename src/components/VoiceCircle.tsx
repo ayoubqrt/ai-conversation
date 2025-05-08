@@ -50,6 +50,6 @@ export const useVolumeLevel = () => {
 };
 
 export const VoiceCircle = ({ volume }: { volume: number }) => {
-  const scale = 1 + volume * 0.5; // pulsation plus ou moins forte
+  const scale = 1 + volume * 0.5;
   return <div className="circle" style={{ transform: `scale(${scale})` }} />;
 };
