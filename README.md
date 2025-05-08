@@ -2,6 +2,10 @@
 
 The goal is to build a fully backend-based AI conversational system, allowing any device (also with low resources) to connect via WebSocket and initiate a conversation with the AI just by sending and receiving audio chunks and benefits from the functionalities of the system e.g. conversation history, LLM power, low-latency streaming, cost-effectiveness, cost tracking by user, etc.
 
+<!-- image from docs -->
+
+![Diagram schema showing interactions between systems](docs/Diagram.png "AI Conversational system diagram")
+
 ## Features
 
 - 🎙️ The voice is captured by the browser.
@@ -23,8 +27,8 @@ The goal is to build a fully backend-based AI conversational system, allowing an
 
 ## Old features from cloudflare agents starter
 
-- 🛠️ Built-in tool system with human-in-the-loop confirmation 
-- 📅 Advanced task scheduling (one-time, delayed, and recurring via cron) 
+- 🛠️ Built-in tool system with human-in-the-loop confirmation
+- 📅 Advanced task scheduling (one-time, delayed, and recurring via cron)
 - 🔄 State management and chat history
 
 ## Prerequisites
